@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Increment_2">
+    <output-path>$PROJECT_DIR$/out/artifacts/Increment_2</output-path>
+    <root id="archive" name="Lab1-BinaryTree.jar">
+      <element id="module-output" name="Lab1-BinaryTree" />
+    </root>
+  </artifact>
+</component>

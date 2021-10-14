@@ -10,6 +10,7 @@ import java.util.List;
  * @author Edmund_Lai
  * @e-mail 1191000311@stu.hit.edu.cn
  * @create 2021-10-06-9:19
+ * @version1.0
  */
 public class BinaryTree {
     /*
@@ -22,8 +23,8 @@ public class BinaryTree {
     TraversalOrder - 记录遍历的顺序，以索引标识
     nodesToBeDeleted - 需要删除的所有结点
      */
-    public final static Color NODE_COLOR = Color.RED;
-    public final static Color AFTER_TRAVERSAL_COLOR = Color.BLUE;
+    public final static Color NODE_COLOR = new Color(183, 231, 253);
+    public final static Color AFTER_TRAVERSAL_COLOR = new Color(255, 233, 87);
     private final TreeNode head = new TreeNode(1, 0, NODE_COLOR, 220, 10);
     private final List<TreeNode> nodes = new ArrayList<>();
     private final List<Integer> scalableNodes = new ArrayList<>();
@@ -53,7 +54,7 @@ public class BinaryTree {
             if (parent.getLeftChild() != null) {
                 throw new RuntimeException("This node already has a left child node !");
             }
-            node = new TreeNode(parent.getIndex() * 2, parent.getDepth() + 1, NODE_COLOR, parent.getX() - 100 / (1 << parent.getDepth()), parent.getY() + 50);
+            node = new TreeNode(parent.getIndex() * 2, parent.getDepth() + 1, NODE_COLOR, parent.getX() - 100 / (1 << parent.getDepth()), parent.getY() + 80);
             parent.setLeftChild(node);
             if (parent.getRightChild() != null) {
                 scalableNodes.remove((Integer) parent.getIndex());
@@ -62,7 +63,7 @@ public class BinaryTree {
             if (parent.getRightChild() != null) {
                 throw new RuntimeException("This node already has a right child node !");
             }
-            node = new TreeNode(parent.getIndex() * 2 + 1, parent.getDepth() + 1, NODE_COLOR, parent.getX() + 100 / (1 << parent.getDepth()), parent.getY() + 50);
+            node = new TreeNode(parent.getIndex() * 2 + 1, parent.getDepth() + 1, NODE_COLOR, parent.getX() + 100 / (1 << parent.getDepth()), parent.getY() + 80);
             parent.setRightChild(node);
             if (parent.getLeftChild() != null) {
                 scalableNodes.remove((Integer) parent.getIndex());

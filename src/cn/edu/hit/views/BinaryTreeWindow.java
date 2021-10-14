@@ -26,9 +26,12 @@ public class BinaryTreeWindow {
     textPanel - 用于显式各种按钮、文本的区域
      */
     private final BinaryTree binaryTree;
-    private final JFrame frame = new JFrame("二叉树遍历可视化小程序");
+    private final JFrame frame = new JFrame("Binary Tree Traversal Visualization Program");
     private final DrawAreaPanel drawPanel;
+    private final JPanel outputPanel = new JPanel();
     private final JPanel textPanel = new JPanel();
+    private final JTextArea outputArea = new JTextArea();
+    private final Color backgroundColor = new Color(247, 246, 233);
 
     public BinaryTreeWindow(BinaryTree binaryTree) {
         this.binaryTree = binaryTree;
@@ -42,48 +45,76 @@ public class BinaryTreeWindow {
     private void initializeWindow() {
         // 可视化窗口的初始化
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1200, 650);
+        frame.setSize(1000, 630);
         frame.getContentPane().setLayout(null);
 
         // 绘制区域的初始化
-        drawPanel.setBackground(Color.WHITE);
+        drawPanel.setBackground(null);
         drawPanel.setLayout(null);
-        drawPanel.setBounds(50, 50, 500, 500);
+        drawPanel.setBorder(BorderFactory.createLineBorder(new Color(49, 113, 87), 3));
+        drawPanel.setBounds(50, 50, 500, 330);
 
-        // 文本区域的初始化
-        textPanel.setBackground(Color.WHITE);
+        //输出序列区域的初始化
+        outputPanel.setBackground(null);
+        outputPanel.setLayout(null);
+        outputPanel.setBorder(BorderFactory.createLineBorder(new Color(49, 113, 87), 3));
+        outputPanel.setBounds(50, 430, 500, 100);
+
+        //输出序列的初始化
+        outputArea.setBackground(null);
+        outputArea.setLayout(null);
+        outputArea.setFont(new Font("New Times Roman", Font.PLAIN, 20));
+        //outputArea.setEditable(false);
+        outputArea.setBounds(80, 480, 400, 40);
+
+        // 功能区域的初始化
+        textPanel.setBackground(null);
         textPanel.setLayout(null);
-        textPanel.setBounds(600, 50, 500, 500);
+        textPanel.setBorder(BorderFactory.createLineBorder(new Color(49, 113, 87), 3));
+        textPanel.setBounds(600, 50, 325, 480);
 
         // 添加到可视化窗口的容器中
         frame.getContentPane().add(drawPanel);
+        frame.getContentPane().add(outputPanel);
         frame.getContentPane().add(textPanel);
+        frame.getContentPane().add(outputArea);
+        frame.getContentPane().setBackground(backgroundColor);
+        frame.setResizable(false);
 
 
         //------------------------------------标签声明开始-----------------------------------------
-        JLabel addNodeLabel = new JLabel("请选择结点编号与插入结点的方向:");
-        addNodeLabel.setBounds(50, 50, 400, 50);
-        addNodeLabel.setFont(addNodeLabel.getFont().deriveFont(20.0f));
+        JLabel addNodeLabel = new JLabel("Node Insertion");
+        addNodeLabel.setBounds(25, 25, 400, 50);
+        addNodeLabel.setFont(addNodeLabel.getFont().deriveFont(30.0f));
         textPanel.add(addNodeLabel);
 
-        JLabel orderSelectLabel = new JLabel("请选择遍历方式：");
-        orderSelectLabel.setBounds(50, 260, 400, 50);
-        orderSelectLabel.setFont(orderSelectLabel.getFont().deriveFont(20.0f));
+        JLabel orderSelectLabel = new JLabel("Traverse");
+        orderSelectLabel.setBounds(25, 250, 400, 50);
+        orderSelectLabel.setFont(orderSelectLabel.getFont().deriveFont(30.0f));
         textPanel.add(orderSelectLabel);
+
+        JLabel outputSequenceLabel = new JLabel("Output Sequence:");
+        outputSequenceLabel.setBounds(15, 10, 400, 40);
+        outputSequenceLabel.setFont(outputSequenceLabel.getFont().deriveFont(25.0f));
+        outputPanel.add(outputSequenceLabel);
         //------------------------------------按钮声明结束-----------------------------------------
 
 
         //------------------------------------按钮声明开始-----------------------------------------
         // 三种遍历的单选按钮初始化
-        JRadioButton preOrderButton = new JRadioButton("前序遍历");
-        preOrderButton.setBounds(25, 310, 125, 50);
+        JRadioButton preOrderButton = new JRadioButton("Pre-Order");
+        preOrderButton.setBounds(30, 315, 135, 40);
         preOrderButton.setFont(preOrderButton.getFont().deriveFont(20.0f));
-        JRadioButton inOrderButton = new JRadioButton("中序遍历");
-        inOrderButton.setBounds(175, 310, 125, 50);
+        JRadioButton inOrderButton = new JRadioButton("In-Order");
+        inOrderButton.setBounds(30, 365, 135, 40);
         inOrderButton.setFont(inOrderButton.getFont().deriveFont(20.0f));
-        JRadioButton postOrderButton = new JRadioButton("后序遍历");
-        postOrderButton.setBounds(325, 310, 125, 50);
+        JRadioButton postOrderButton = new JRadioButton("Post-Order");
+        postOrderButton.setBounds(30, 415, 135, 40);
         postOrderButton.setFont(postOrderButton.getFont().deriveFont(20.0f));
+        preOrderButton.setBackground(null);
+        inOrderButton.setBackground(null);
+        postOrderButton.setBackground(null);
+
         textPanel.add(preOrderButton);
         textPanel.add(inOrderButton);
         textPanel.add(postOrderButton);
@@ -95,27 +126,28 @@ public class BinaryTreeWindow {
         orderGroup.add(postOrderButton);
 
         // 开始遍历、重置遍历结果的按钮初始化
-        JButton traversalButton = new JButton("开始遍历");
-        traversalButton.setBounds(50, 380, 150, 40);
+        JButton traversalButton = new JButton("Start");
+        traversalButton.setBounds(175, 336, 100, 40);
         traversalButton.setFont(traversalButton.getFont().deriveFont(20.0f));
         textPanel.add(traversalButton);
 
         // 重置按钮初始化
-        JButton resetButton = new JButton("重置");
-        resetButton.setBounds(270, 380, 150, 40);
+        JButton resetButton = new JButton("Reset");
+        resetButton.setBounds(175, 394, 100, 40);
         resetButton.setFont(resetButton.getFont().deriveFont(20.0f));
         textPanel.add(resetButton);
 
         // 确认插入结点
-        JButton confirmButton = new JButton("确认插入");
-        confirmButton.setBounds(70, 200, 130, 40);
+        JButton confirmButton = new JButton("Insert");
+        confirmButton.setBounds(50, 165, 100, 40);
         confirmButton.setFont(confirmButton.getFont().deriveFont(20.0f));
         textPanel.add(confirmButton);
 
-        // 确认删除结点
-        JButton deleteButton = new JButton("删除");
-        deleteButton.setBounds(270, 200, 130, 40);
+        //删除结点
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.setBounds(175, 165, 100, 40);
         deleteButton.setFont(deleteButton.getFont().deriveFont(20.0f));
+        deleteButton.setBackground(new Color(147, 209, 255));
         textPanel.add(deleteButton);
         //------------------------------------按钮声明结束-----------------------------------------
 
@@ -123,15 +155,16 @@ public class BinaryTreeWindow {
         //------------------------------------下拉框选择声明开始-----------------------------------------
         // 方向选择
         JComboBox<String> directionBox = new JComboBox();
-        directionBox.setBounds(270, 120, 150, 40);
+        directionBox.setBounds(175, 100, 100, 40);
         directionBox.setFont(directionBox.getFont().deriveFont(20.0f));
         textPanel.add(directionBox);
 
         // 结点选择
         JComboBox<Integer> indexBox = new JComboBox();
-        indexBox.setBounds(70, 120, 150, 40);
+        indexBox.setBounds(50, 100, 100, 40);
         indexBox.setFont(indexBox.getFont().deriveFont(20.0f));
         textPanel.add(indexBox);
+
         //------------------------------------下拉框选择声明结束-----------------------------------------
 
 
@@ -168,6 +201,7 @@ public class BinaryTreeWindow {
             traversalButton.setEnabled(false);
             resetButton.setEnabled(false);
             confirmButton.setEnabled(false);
+            deleteButton.setEnabled(false);
 
             // repaint方法不总是立刻生效，Swing框架默认的行为是会合并多个repaint的操作的
             // 正确的操作是使用多线程的方式处理
@@ -179,13 +213,13 @@ public class BinaryTreeWindow {
                         String selection = selectedOrderButton.getText();
                         binaryTree.getTraversalOrder().clear(); //每次遍历都要情况前一次遍历的结果
                         switch (selection){
-                            case "前序遍历":
+                            case "Pre-Order":
                                 binaryTree.preOrderTraversal(binaryTree.getHead());
                                 break;
-                            case "中序遍历":
+                            case "In-Order":
                                 binaryTree.inOrderTraversal(binaryTree.getHead());
                                 break;
-                            case "后序遍历":
+                            case "Post-Order":
                                 binaryTree.postOrderTraversal(binaryTree.getHead());
                                 break;
                             default:break;
@@ -206,6 +240,7 @@ public class BinaryTreeWindow {
                         traversalButton.setEnabled(true);
                         resetButton.setEnabled(true);
                         confirmButton.setEnabled(true);
+                        deleteButton.setEnabled(true);
                     }
                 }
             }).start();

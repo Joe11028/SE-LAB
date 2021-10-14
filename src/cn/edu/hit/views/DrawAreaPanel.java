@@ -42,11 +42,13 @@ public class DrawAreaPanel extends JPanel {
             TreeNode leftChild = treeNode.getLeftChild();
             TreeNode rightChild = treeNode.getRightChild();
             // 画线
+            Graphics2D g2 = (Graphics2D) graphics;
+            g2.setStroke(new BasicStroke(2.0f));
             if (leftChild!=null){
-                graphics.drawLine(treeNode.getX()+15, treeNode.getY()+15, leftChild.getX()+15, leftChild.getY()+15);
+                g2.drawLine(treeNode.getX()+15, treeNode.getY()+15, leftChild.getX()+15, leftChild.getY()+15);
             }
             if (rightChild!=null){
-                graphics.drawLine(treeNode.getX()+15, treeNode.getY()+15, rightChild.getX()+15, rightChild.getY()+15);
+                g2.drawLine(treeNode.getX()+15, treeNode.getY()+15, rightChild.getX()+15, rightChild.getY()+15);
 
             }
             // 标号

@@ -37,7 +37,8 @@ public class BinaryTreeWindow {
     private final JPanel outputPanel = new JPanel();
     private final JPanel textPanel = new JPanel();
     private final JTextArea outputArea = new JTextArea();
-    private final static Color BACKGROUND_COLOR = new Color(247, 246, 233);
+    private final Color BACKGROUND_COLOR = new Color(247, 246, 233);
+    private final Color BUTTON_COLOR = new Color(183, 231, 253);
 
 
     public BinaryTreeWindow(BinaryTree binaryTree) {
@@ -52,7 +53,7 @@ public class BinaryTreeWindow {
     private void initializeWindow() {
         // 可视化窗口的初始化
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 630);
+        frame.setSize(1000, 650);
         frame.getContentPane().setLayout(null);
 
         // 绘制区域的初始化
@@ -65,20 +66,21 @@ public class BinaryTreeWindow {
         outputPanel.setBackground(null);
         outputPanel.setLayout(null);
         outputPanel.setBorder(BorderFactory.createLineBorder(new Color(49, 113, 87), 3));
-        outputPanel.setBounds(50, 430, 500, 100);
+        outputPanel.setBounds(50, 430, 500, 120);
 
         //输出序列的初始化
         outputArea.setBackground(null);
         outputArea.setLayout(null);
         outputArea.setFont(new Font("New Times Roman", Font.PLAIN, 20));
-        //outputArea.setEditable(false);
-        outputArea.setBounds(80, 480, 400, 40);
+        outputArea.setEditable(false);
+        outputArea.setLineWrap(true);
+        outputArea.setBounds(80, 480, 400, 50);
 
         // 功能区域的初始化
         textPanel.setBackground(null);
         textPanel.setLayout(null);
         textPanel.setBorder(BorderFactory.createLineBorder(new Color(49, 113, 87), 3));
-        textPanel.setBounds(600, 50, 325, 480);
+        textPanel.setBounds(600, 50, 325, 500);
 
         // 添加到可视化窗口的容器中
         frame.getContentPane().add(drawPanel);
@@ -137,25 +139,28 @@ public class BinaryTreeWindow {
         JButton traversalButton = new JButton("Start");
         traversalButton.setBounds(175, 336, 100, 40);
         traversalButton.setFont(traversalButton.getFont().deriveFont(20.0f));
+        traversalButton.setBackground(BUTTON_COLOR);
         textPanel.add(traversalButton);
 
         // 重置按钮初始化
         JButton resetButton = new JButton("Reset");
         resetButton.setBounds(175, 394, 100, 40);
         resetButton.setFont(resetButton.getFont().deriveFont(20.0f));
+        resetButton.setBackground(BUTTON_COLOR);
         textPanel.add(resetButton);
 
         // 确认插入结点
         JButton confirmButton = new JButton("Insert");
         confirmButton.setBounds(50, 165, 100, 40);
         confirmButton.setFont(confirmButton.getFont().deriveFont(20.0f));
+        confirmButton.setBackground(BUTTON_COLOR);
         textPanel.add(confirmButton);
 
         //删除结点
         JButton deleteButton = new JButton("Delete");
         deleteButton.setBounds(175, 165, 100, 40);
         deleteButton.setFont(deleteButton.getFont().deriveFont(20.0f));
-        deleteButton.setBackground(new Color(147, 209, 255));
+        deleteButton.setBackground(BUTTON_COLOR);
         textPanel.add(deleteButton);
         //------------------------------------按钮声明结束-----------------------------------------
 
@@ -165,12 +170,14 @@ public class BinaryTreeWindow {
         JComboBox<String> directionBox = new JComboBox();
         directionBox.setBounds(175, 100, 100, 40);
         directionBox.setFont(directionBox.getFont().deriveFont(20.0f));
+        directionBox.setBackground(BUTTON_COLOR);
         textPanel.add(directionBox);
 
         // 结点选择
         JComboBox<Integer> indexBox = new JComboBox();
         indexBox.setBounds(50, 100, 100, 40);
         indexBox.setFont(indexBox.getFont().deriveFont(20.0f));
+        indexBox.setBackground(BUTTON_COLOR);
         textPanel.add(indexBox);
 
         //------------------------------------下拉框选择声明结束-----------------------------------------

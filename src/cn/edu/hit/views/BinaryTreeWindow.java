@@ -4,11 +4,14 @@ import cn.edu.hit.binarytree.BinaryTree;
 import cn.edu.hit.binarytree.TreeNode;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.swing.plaf.FontUIResource;
 
 /**
  * 用于二叉树遍历的可视化
@@ -24,6 +27,9 @@ public class BinaryTreeWindow {
     frame - 可视化窗口对象
     panel - 嵌入可视化窗口中的绘制区域
     textPanel - 用于显式各种按钮、文本的区域
+    outputPanel - 打印遍历顺序
+    outputArea - outputPanel被嵌入的区域
+    BACKGROUND_COLOR - frame的背景颜色
      */
     private final BinaryTree binaryTree;
     private final JFrame frame = new JFrame("Binary Tree Traversal Visualization Program");
@@ -31,7 +37,8 @@ public class BinaryTreeWindow {
     private final JPanel outputPanel = new JPanel();
     private final JPanel textPanel = new JPanel();
     private final JTextArea outputArea = new JTextArea();
-    private final Color backgroundColor = new Color(247, 246, 233);
+    private final static Color BACKGROUND_COLOR = new Color(247, 246, 233);
+
 
     public BinaryTreeWindow(BinaryTree binaryTree) {
         this.binaryTree = binaryTree;
@@ -78,7 +85,7 @@ public class BinaryTreeWindow {
         frame.getContentPane().add(outputPanel);
         frame.getContentPane().add(textPanel);
         frame.getContentPane().add(outputArea);
-        frame.getContentPane().setBackground(backgroundColor);
+        frame.getContentPane().setBackground(BACKGROUND_COLOR);
         frame.setResizable(false);
 
 
@@ -97,6 +104,7 @@ public class BinaryTreeWindow {
         outputSequenceLabel.setBounds(15, 10, 400, 40);
         outputSequenceLabel.setFont(outputSequenceLabel.getFont().deriveFont(25.0f));
         outputPanel.add(outputSequenceLabel);
+
         //------------------------------------按钮声明结束-----------------------------------------
 
 
@@ -172,6 +180,14 @@ public class BinaryTreeWindow {
         //确认插入事件绑定
         confirmButton.addActionListener(e -> {
             Integer selectedNodeIndex = (Integer) indexBox.getSelectedItem();
+            if(selectedNodeIndex>= (1<<BinaryTree.MAX_DEPTH)){ //防止插入过多的点显示失败
+                UIManager.put("OptionPane.minimumSize", new Dimension(400,100));
+                UIManager.put("OptionPane.messageFont", new Font(null, Font.PLAIN, 18));
+                UIManager.put("OptionPane.buttonFont", new Font(null, Font.BOLD, 14));
+                UIManager.put("OptionPane.okButtonText", "OK");
+                JOptionPane.showMessageDialog(frame,"Can't insert more node at this node!","Warning!",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             String selectedDirectionString = (String) directionBox.getSelectedItem();
             Integer selectedDirection = (selectedDirectionString.equals("Left")) ? BinaryTree.ADD_LEFT : BinaryTree.ADD_RIGHT;
             binaryTree.addTreeNode(binaryTree.getTreeNodeByIndex(selectedNodeIndex),selectedDirection);
@@ -186,6 +202,14 @@ public class BinaryTreeWindow {
         //删除事件绑定
         deleteButton.addActionListener(e -> {
             Integer selectedNodeIndex = (Integer) indexBox.getSelectedItem();
+            if (selectedNodeIndex.equals(new Integer(1))){
+                UIManager.put("OptionPane.minimumSize", new Dimension(400,100));
+                UIManager.put("OptionPane.messageFont", new Font(null, Font.PLAIN, 18));
+                UIManager.put("OptionPane.buttonFont", new Font(null, Font.BOLD, 14));
+                UIManager.put("OptionPane.okButtonText", "OK");
+                JOptionPane.showMessageDialog(frame,"Can't delete root node!","Warning!",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             binaryTree.deleteTreeNodeByIndex(selectedNodeIndex);
 
             // 更新下拉框
@@ -197,11 +221,6 @@ public class BinaryTreeWindow {
 
         //开始遍历事件绑定
         traversalButton.addActionListener(e -> {
-            // 无效化插入、遍历、重置的按钮，防止误触导致程序崩溃
-            traversalButton.setEnabled(false);
-            resetButton.setEnabled(false);
-            confirmButton.setEnabled(false);
-            deleteButton.setEnabled(false);
 
             // repaint方法不总是立刻生效，Swing框架默认的行为是会合并多个repaint的操作的
             // 正确的操作是使用多线程的方式处理
@@ -210,8 +229,26 @@ public class BinaryTreeWindow {
                 while (orderButtons.hasMoreElements()){
                     AbstractButton selectedOrderButton = orderButtons.nextElement();
                     if (selectedOrderButton.isSelected()){
+
+                        // 无效化插入、遍历、重置的按钮，防止误触导致程序崩溃
+                        traversalButton.setEnabled(false);
+                        resetButton.setEnabled(false);
+                        confirmButton.setEnabled(false);
+                        deleteButton.setEnabled(false);
+
                         String selection = selectedOrderButton.getText();
-                        binaryTree.getTraversalOrder().clear(); //每次遍历都要情况前一次遍历的结果
+                        if (binaryTree.getTraversalOrder().size()!=0){
+                            UIManager.put("OptionPane.minimumSize", new Dimension(400,100));
+                            UIManager.put("OptionPane.messageFont", new Font(null, Font.PLAIN, 18));
+                            UIManager.put("OptionPane.buttonFont", new Font(null, Font.BOLD, 14));
+                            UIManager.put("OptionPane.okButtonText", "OK");
+                            JOptionPane.showMessageDialog(frame,"Please push the reset button before next traversal !","Warning!",JOptionPane.WARNING_MESSAGE);
+                            traversalButton.setEnabled(true);
+                            resetButton.setEnabled(true);
+                            confirmButton.setEnabled(true);
+                            deleteButton.setEnabled(true);
+                            return;
+                        }
                         switch (selection){
                             case "Pre-Order":
                                 binaryTree.preOrderTraversal(binaryTree.getHead());
@@ -225,8 +262,15 @@ public class BinaryTreeWindow {
                             default:break;
                         }
                         List<Integer> traversalOrder = binaryTree.getTraversalOrder();
+                        int count = 0;
                         for (Integer treeNodeIndex : traversalOrder) {
                             TreeNode treeNode = binaryTree.getTreeNodeByIndex(treeNodeIndex);
+                            if (count==0){
+                                outputArea.append(String.valueOf(treeNodeIndex));
+                                count++;
+                            }else {
+                                outputArea.append("\u2192"+treeNodeIndex);
+                            }
                             treeNode.setColor(BinaryTree.AFTER_TRAVERSAL_COLOR);
                             drawPanel.repaint();
 
@@ -241,8 +285,15 @@ public class BinaryTreeWindow {
                         resetButton.setEnabled(true);
                         confirmButton.setEnabled(true);
                         deleteButton.setEnabled(true);
+                        return;
                     }
                 }
+
+                UIManager.put("OptionPane.minimumSize", new Dimension(400,100));
+                UIManager.put("OptionPane.messageFont", new Font(null, Font.PLAIN, 18));
+                UIManager.put("OptionPane.buttonFont", new Font(null, Font.BOLD, 14));
+                UIManager.put("OptionPane.okButtonText", "OK");
+                JOptionPane.showMessageDialog(frame,"Please choose an order for traversal !","Warning!",JOptionPane.WARNING_MESSAGE);
             }).start();
 
         });
@@ -254,6 +305,8 @@ public class BinaryTreeWindow {
                 treeNode.setColor(BinaryTree.NODE_COLOR);
             }
             drawPanel.repaint();
+            outputArea.setText("");
+            binaryTree.getTraversalOrder().clear();
         });
 
         //------------------------------------按钮绑定事件结束-----------------------------------------

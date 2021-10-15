@@ -22,6 +22,7 @@ public class BinaryTree {
     AFTER_TRAVERSAL_COLOR - 遍历后的结点颜色
     TraversalOrder - 记录遍历的顺序，以索引标识
     nodesToBeDeleted - 需要删除的所有结点
+    MAX_DEPTH - 由于窗口大小限制与美观的效果设置的最高层数
      */
     public final static Color NODE_COLOR = new Color(183, 231, 253);
     public final static Color AFTER_TRAVERSAL_COLOR = new Color(255, 233, 87);
@@ -32,6 +33,7 @@ public class BinaryTree {
     public static final Integer ADD_RIGHT = 1;
     private final List<Integer> traversalOrder = new ArrayList<>();
     private final List<TreeNode> nodesToBeDeleted = new ArrayList<>();
+    public final static Integer MAX_DEPTH = 3;
 
 
     public BinaryTree() {
@@ -71,6 +73,7 @@ public class BinaryTree {
         }
         this.nodes.add(node);
         this.scalableNodes.add(node.getIndex());
+
     }
 
     /**
@@ -150,26 +153,27 @@ public class BinaryTree {
 
     /**
      * 找到需要删除的所有结点
+     *
      * @param head 被删除结点
      */
-    private void findNodesToBeDeleted(TreeNode head){
+    private void findNodesToBeDeleted(TreeNode head) {
         nodesToBeDeleted.add(head);
-        if (head.getLeftChild()!=null){
+        if (head.getLeftChild() != null) {
             findNodesToBeDeleted(head.getLeftChild());
         }
-        if (head.getRightChild()!=null){
+        if (head.getRightChild() != null) {
             findNodesToBeDeleted(head.getRightChild());
         }
     }
 
-    private void freshScalableNodes(TreeNode head){
-        if (head.getLeftChild()==null || head.getRightChild()==null){
+    private void freshScalableNodes(TreeNode head) {
+        if (head.getLeftChild() == null || head.getRightChild() == null) {
             scalableNodes.add(head.getIndex());
         }
-        if (head.getLeftChild()!=null){
+        if (head.getLeftChild() != null) {
             freshScalableNodes(head.getLeftChild());
         }
-        if (head.getRightChild()!=null){
+        if (head.getRightChild() != null) {
             freshScalableNodes(head.getRightChild());
         }
     }

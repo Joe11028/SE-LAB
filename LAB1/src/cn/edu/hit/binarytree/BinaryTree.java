@@ -24,7 +24,7 @@ public class BinaryTree {
     nodesToBeDeleted - 需要删除的所有结点
     MAX_DEPTH - 由于窗口大小限制与美观的效果设置的最高层数
      */
-    public final static Color NODE_COLOR = new Color(183, 231, 253);
+        public final static Color NODE_COLOR = new Color(183, 231, 253);
     public final static Color AFTER_TRAVERSAL_COLOR = new Color(255, 233, 87);
     private final TreeNode head = new TreeNode(1, 0, NODE_COLOR, 220, 10);
     private final List<TreeNode> nodes = new ArrayList<>();
